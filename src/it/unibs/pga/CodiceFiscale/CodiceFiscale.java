@@ -75,4 +75,5 @@ public class CodiceFiscale {
     public void setControllo(char controllo) {
         this.controllo = controllo;
     }
+
 }

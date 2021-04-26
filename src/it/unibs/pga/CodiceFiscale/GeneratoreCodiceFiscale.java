@@ -92,7 +92,7 @@ public class GeneratoreCodiceFiscale {
      */
 
 
-   public void leggiInput() throws XMLStreamException {
+   public void XMLABBOZZO() throws XMLStreamException {
 
        XMLInputFactory xmlif = null;
        XMLStreamReader xmlr = null;
@@ -129,10 +129,26 @@ public class GeneratoreCodiceFiscale {
 
    }
 
-   /*
-     codice fiscale
-     metodo genera cf
-     crea una stringa dove unisce i metodi sopra
+   public void leggiIntero() throws XMLStreamException{
+
+       XMLInputFactory xmlif = null;
+       XMLStreamReader xmlr = null;
+       try {
+           xmlif = XMLInputFactory.newInstance();
+           xmlr = xmlif.createXMLStreamReader("codiciFiscali.xml", new FileInputStream("codiciFiscali.xml"));
+       } catch (Exception e) {
+           System.out.println("Errore nell'inizializzazione del reader:");
+           System.out.println(e.getMessage());
+       }
+       while (xmlr.hasName()){
+
+       }
+
+    }
+/*
+ codice fiscale
+ metodo genera cf
+ crea una stringa dove unisce i metodi sopra
      strng = prendi_cognome + prendi nome + .....
      */
 }

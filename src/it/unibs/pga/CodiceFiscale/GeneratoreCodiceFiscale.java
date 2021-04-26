@@ -58,10 +58,21 @@ public class GeneratoreCodiceFiscale {
        lo si ritorna come una stringa che andrà ad unirsi alla mstringa finale
     - metodi di supporto :
      Metodo per il mese: passandogli un intero ti ritorna, attraverso un if o uno switch, la lettera del mese a cui corrisponde
+
      Metodo per il giorno: prende in input il sesso della persona in questione e in base a quello se è maschio non fa
      nulla e ci ritorna il dato così com'era
      se femmina gli aggiunge 40
      */
+    public String giorno(char sesso, String data){
+        String[] parti = data.split("-");
+        String DataGiorno = parti[2];
+        int RisultatoIntero = Integer.parseInt(DataGiorno);
+        if(sesso=='F')
+            RisultatoIntero = RisultatoIntero + 40;
+
+        String Risultato = String.valueOf(RisultatoIntero);
+        return Risultato;
+    }
 
     /*
     Metodo per i comuni di nascita:
@@ -69,6 +80,11 @@ public class GeneratoreCodiceFiscale {
     e ci ritorna il codice del comune
     poi ritornerà la solita stringa che andrà alla fine ad unirsi al cf
      */
+
+   // public String comuni(){
+    //    String codice_comune=imput;
+        // SE risulta dentro lo START_DOCUMENT codice bisogna aquisirlo come stringa
+    //}
 
     /*
     Metodo per carattere di controllo: (Se volete lo fa volentieri la CATTI)

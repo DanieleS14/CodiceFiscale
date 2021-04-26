@@ -76,4 +76,14 @@ public class CodiceFiscale {
         this.controllo = controllo;
     }
 
+    /*
+
+     */
+
+    /**
+     * CATTI fa il metodo per vedere se un codice è valido
+     * ciclo for che mi cicla su tutto il codice. poi verrà in soccorso ALFIERE per la data del giorno di nascita
+     * ...
+     */
+
 }

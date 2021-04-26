@@ -3,9 +3,26 @@ package it.unibs.pga.CodiceFiscale;
 import javax.xml.stream.XMLStreamException;
 
 public class Main {
+
+    public static final int NUMERO_PERSONE = 1;
+
     public static void main(String[] args) throws XMLStreamException {
 
-        GeneratoreCodiceFiscale gf = new GeneratoreCodiceFiscale();
+        /**
+         * NON TOCCARE
+         *
+         * -Alfiere
+         */
+        /*for (int i = 0; i< NUMERO_PERSONE; i++){
+            GeneratoreCodiceFiscale gcf= new GeneratoreCodiceFiscale();
+            String cod_prov= gcf.generatore(i);
+            System.out.println(cod_prov);
+            //CodiceFiscale cf= new CodiceFiscale(cod_prov);
+        }*/
+
+
+
+       GeneratoreCodiceFiscale gf = new GeneratoreCodiceFiscale();
         String codice_fiscale = "CTTFNC01D70B157L";
         CodiceFiscale cf = new CodiceFiscale(codice_fiscale);
         cf.codiceValido(codice_fiscale);

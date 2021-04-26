@@ -8,6 +8,21 @@ import java.io.FileInputStream;
 
 public class GeneratoreCodiceFiscale {
 
+    /**
+     * NON TOCCARE
+     * <br> questo è il metodo in cui andremo a creare il codice fiscale
+     * <br>vero e proprio, non usatelo ancora peer piacere
+     *
+     * <br>-Alfiere
+     */
+    public String generatore(int id) throws XMLStreamException {
+
+        String id_string= String.valueOf(id);
+        String codice= leggiDatoXML(id_string, "comune_nascita");
+
+        return codice;
+    }
+
 //    public String prendi_cognome(Gestione gs){
 //
 //        String cognome = "CATTIVELLI";
@@ -91,7 +106,11 @@ public class GeneratoreCodiceFiscale {
     lol:-)     si guarda da internet che è spiegato benissimo
      */
 
-
+    /**
+     * NON TOCCARE
+     *
+     * -Alfiere
+     */
    public void XMLABBOZZO() throws XMLStreamException {
 
        XMLInputFactory xmlif = null;
@@ -129,22 +148,66 @@ public class GeneratoreCodiceFiscale {
 
    }
 
-   public void leggiIntero() throws XMLStreamException{
+    /**
+     * NON TOCCARE
+     *
+     * <br>-Alfiere
+     *
+     * <br> sistemare il ciclo for, implementare un while?
+     *
+     * @param id
+     * @param elemento_necessario
+     * @return
+     * @throws XMLStreamException
+     */
+   public String leggiDatoXML(String id, String elemento_necessario) throws XMLStreamException{
+
+       String carattere_necessario= null;
+       boolean trovato = false;
 
        XMLInputFactory xmlif = null;
        XMLStreamReader xmlr = null;
        try {
            xmlif = XMLInputFactory.newInstance();
-           xmlr = xmlif.createXMLStreamReader("codiciFiscali.xml", new FileInputStream("codiciFiscali.xml"));
+           xmlr = xmlif.createXMLStreamReader("inputPersone.xml", new FileInputStream("inputPersone.xml"));
        } catch (Exception e) {
            System.out.println("Errore nell'inizializzazione del reader:");
            System.out.println(e.getMessage());
        }
-       while (xmlr.hasName()){
+       int c=0;
+       while (xmlr.hasNext() && !trovato){
+           System.out.println(c);
+           c++;
+          switch (xmlr.getEventType()){
 
+              case XMLStreamConstants.START_ELEMENT:
+                  System.out.println("dentro");
+                  if (xmlr.getAttributeCount()>0 && xmlr.getAttributeValue(0).equals(id)) {//START_ELEMENT dà come risultato un intero
+                      for (int j = 0; j < 20; j++) {
+                          xmlr.next();
+
+                          switch (xmlr.getEventType()){
+                              case XMLStreamConstants.START_ELEMENT:
+
+                                  if (xmlr.getLocalName().equals(elemento_necessario)){
+                                      xmlr.next();
+                                      carattere_necessario= xmlr.getText();
+                                      System.out.println(j);
+                                      //è possibile andare a cancellare un elemento dal XML dato?
+                                      trovato= true;
+                                  }
+                              break;
+                          }
+                      }
+                  }
+                  break;
+          }
+          xmlr.next();
        }
+       return carattere_necessario;
+   }
 
-    }
+
 /*
  codice fiscale
  metodo genera cf

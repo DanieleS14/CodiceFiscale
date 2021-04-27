@@ -13,19 +13,19 @@ public class Main {
          *
          * -Alfiere
          */
-        /*for (int i = 0; i< NUMERO_PERSONE; i++){
+        for (int i = 0; i< NUMERO_PERSONE; i++){
             GeneratoreCodiceFiscale gcf= new GeneratoreCodiceFiscale();
             String cod_prov= gcf.generatore(i);
             System.out.println(cod_prov);
             //CodiceFiscale cf= new CodiceFiscale(cod_prov);
-        }*/
+        }
 
 
 
-       GeneratoreCodiceFiscale gf = new GeneratoreCodiceFiscale();
+      /* GeneratoreCodiceFiscale gf = new GeneratoreCodiceFiscale();
         String codice_fiscale = "CTTFNC01D70B157L";
         CodiceFiscale cf = new CodiceFiscale(codice_fiscale);
-        cf.codiceValido(codice_fiscale);
+        cf.codiceValido(codice_fiscale);*/
 //        String pp = String.valueOf(parola.charAt(1)) + String.valueOf(parola.charAt(2));
 //        int gg= parola.charAt(1)*10+ parola.charAt(2);
 //        System.out.println(pp);

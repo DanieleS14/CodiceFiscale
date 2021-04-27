@@ -8,6 +8,8 @@ import java.io.FileInputStream;
 
 public class GeneratoreCodiceFiscale {
 
+    public static final int MASSIMO_ELEMENTI_PERSONA = 18;//bisgna capire perchè 18 è il valore massimo esatto
+
     /**
      * NON TOCCARE
      * <br> questo è il metodo in cui andremo a creare il codice fiscale
@@ -17,8 +19,9 @@ public class GeneratoreCodiceFiscale {
      */
     public String generatore(int id) throws XMLStreamException {
 
+        id =127;//scelto da laura
         String id_string= String.valueOf(id);
-        String codice= leggiDatoXML(id_string, "comune_nascita");
+        String codice= leggiDatoXML(id_string, "data_nascita");
 
         return codice;
     }
@@ -91,7 +94,7 @@ public class GeneratoreCodiceFiscale {
 
     /*
     Metodo per i comuni di nascita:
-    da imput si prende il comune che entra  in un controllo nella lista dei comuni xml
+    da input si prende il comune che entra  in un controllo nella lista dei comuni xml
     e ci ritorna il codice del comune
     poi ritornerà la solita stringa che andrà alla fine ad unirsi al cf
      */
@@ -157,7 +160,7 @@ public class GeneratoreCodiceFiscale {
      *
      * @param id
      * @param elemento_necessario
-     * @return
+     * @return carattere_necessario ossia quello che cerchiamo di una persona(nome, cognome, sesso...)
      * @throws XMLStreamException
      */
    public String leggiDatoXML(String id, String elemento_necessario) throws XMLStreamException{
@@ -174,44 +177,25 @@ public class GeneratoreCodiceFiscale {
            System.out.println("Errore nell'inizializzazione del reader:");
            System.out.println(e.getMessage());
        }
-       int c=0;
        while (xmlr.hasNext() && !trovato){
-           System.out.println(c);
-           c++;
-          switch (xmlr.getEventType()){
 
-              case XMLStreamConstants.START_ELEMENT:
-                  System.out.println("dentro");
-                  if (xmlr.getAttributeCount()>0 && xmlr.getAttributeValue(0).equals(id)) {//START_ELEMENT dà come risultato un intero
-                      for (int j = 0; j < 20; j++) {
-                          xmlr.next();
+          if (xmlr.getEventType()==1 && xmlr.getAttributeCount()>0 && xmlr.getAttributeValue(0).equals(id)) {//START_ELEMENT dà come risultato un intero
+              for (int j = 0; j < MASSIMO_ELEMENTI_PERSONA; j++) {
+                  xmlr.next();
 
-                          switch (xmlr.getEventType()){
-                              case XMLStreamConstants.START_ELEMENT:
-
-                                  if (xmlr.getLocalName().equals(elemento_necessario)){
-                                      xmlr.next();
-                                      carattere_necessario= xmlr.getText();
-                                      System.out.println(j);
-                                      //è possibile andare a cancellare un elemento dal XML dato?
-                                      trovato= true;
-                                  }
-                              break;
-                          }
-                      }
+                  if (xmlr.getEventType()==1 && xmlr.getLocalName().equals(elemento_necessario)){
+                      xmlr.next();
+                      carattere_necessario= xmlr.getText();
+                      //è possibile andare a cancellare un elemento dal XML dato?
+                      trovato= true;
+                      break;
                   }
-                  break;
+
+              }
           }
           xmlr.next();
        }
        return carattere_necessario;
    }
 
-
-/*
- codice fiscale
- metodo genera cf
- crea una stringa dove unisce i metodi sopra
-     strng = prendi_cognome + prendi nome + .....
-     */
 }

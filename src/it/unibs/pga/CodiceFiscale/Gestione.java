@@ -198,4 +198,33 @@ public class Gestione{
         }
     }
 
+    public char conversioneMese(int numero_mese){
+        char mese;
+        if(numero_mese == 1){
+            return mese = 'A';
+        }else if(numero_mese == 2){
+            return mese = 'B';
+        }else if(numero_mese == 3){
+            return mese = 'C';
+        }else if(numero_mese == 4){
+            return mese = 'D';
+        }else if(numero_mese == 5){
+            return mese = 'E';
+        }else if(numero_mese == 6){
+            return mese = 'H';
+        }else if(numero_mese == 7){
+            return mese = 'L';
+        }else if(numero_mese == 8){
+            return mese = 'M';
+        }else if(numero_mese == 9){
+            return mese = 'P';
+        }else if(numero_mese == 10){
+            return mese = 'R';
+        }else if(numero_mese == 11){
+            return mese = 'S';
+        }else{
+            return mese = 'T';
+        }
+    }
+
 }

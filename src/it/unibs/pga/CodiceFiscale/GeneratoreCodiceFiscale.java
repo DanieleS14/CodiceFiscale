@@ -19,35 +19,42 @@ public class GeneratoreCodiceFiscale {
      */
     public String generatore(int id) throws XMLStreamException {
 
-        id =127;//scelto da laura
         String id_string= String.valueOf(id);
-        String codice= leggiDatoXML(id_string, "data_nascita");
+        String cognome= prendi_cognome(id_string);
 
-        return codice;
+        return cognome;
     }
 
-//    public String prendi_cognome(Gestione gs){
-//
-//        String cognome = "CATTIVELLI";
-//        //String cognome = prendiamo il cognome da xml
-//        String cognomeCF;
-//        //Quindi qui abbiamo una stringa con il cognome preso dal file testo XML
-//        //Ora per estrapolare le prime tre consonanti mi ciclo sulla stinga e mi prendo le prime tre
-//        //qual'ora non ci fossero abbastanza consonati prendo la prima vocale e qual'ora le lettere non bastassero
-//        //metto una X
-//        int j=0;
-//        for(int i = 0; i < cognome.length(); i++){
-//            if (!gs.controlloConsonanti(cognome.charAt(i))){
-//                cognomeCF.charAt(j)= String.valueOf(cognome.charAt(i));
-//                j++;
-//            }
-//        }
-//        if (cognomeCF.length() < 3){
-//            //aggiungere X in coda finchè non diventa di lungheza 3z
-//        }
-//
-//        return cognomeCF;
-//    }
+    public String prendi_cognome(String id) throws XMLStreamException {
+
+        Gestione gs= new Gestione();
+
+        String cognome = leggiDatoXML(id, "cognome");
+        //Quindi qui abbiamo una stringa con il cognome preso dal file testo XML
+        String cognomeCF= "";
+        //Ora per estrapolare le prime tre consonanti mi ciclo sulla stinga e mi prendo le prime tre
+        //qual'ora non ci fossero abbastanza consonati prendo la prima vocale e qual'ora le lettere non bastassero
+        //metto una X
+
+        for(int i = 0; i < cognome.length(); i++){
+            if (gs.controlloConsonanti(cognome.charAt(i))){
+                cognomeCF+=cognome.charAt(i);
+            }
+        }
+
+        for (int j=0; j< cognome.length(); j++){
+            if (cognomeCF.length()<3 && gs.controlloVocali(cognome.charAt(j))){
+                cognomeCF+= cognome.charAt(j);
+            }
+        }
+        int cdf_ln =cognomeCF.length();
+        for (int k=0; k< 3-cdf_ln; k++){
+            cognomeCF+= "X";
+        }
+
+        return cognomeCF;
+    }
+
 //    public String prendi_nome(Gestione gs){
 //        int conta = 0;
 //        String nome = "FRANCESCA";

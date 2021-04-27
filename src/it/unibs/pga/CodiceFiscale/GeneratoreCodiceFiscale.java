@@ -117,6 +117,27 @@ public class GeneratoreCodiceFiscale {
      */
 
     /**
+     *  QUESTO BELLISSIMO METODO DI M POTREBBE ANCHE RITORNARMI LA STRINGA FINALE DEL CF
+     * @param codice_fiscale
+     * @return
+     */
+    public String letteraDiControllo (String codice_fiscale){
+        Gestione gs = new Gestione();
+        int valore = 0;
+        for(int i = 0; i < 15; i = i + 2){
+            valore += gs.tabellaDispari(codice_fiscale.charAt(i));
+        }
+        for(int i = 1; i < 15; i = i + 2){
+            valore += gs.tabellaPari(codice_fiscale.charAt(i));
+        }
+        valore = valore % 26;
+        char carattere_controllo = gs.tabellaConversione(valore);
+        codice_fiscale += carattere_controllo;
+        return codice_fiscale;
+    }
+
+
+    /**
      * NON TOCCARE
      *
      * -Alfiere

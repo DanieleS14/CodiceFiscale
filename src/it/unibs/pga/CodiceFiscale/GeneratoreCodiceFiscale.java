@@ -329,8 +329,8 @@ public class GeneratoreCodiceFiscale {
    }
 
 
-    /*
-     * è UNA PROVA SOLO STO TENTANDO DI CAPIRE COME FUNZIONA
+    /**
+     * per funzionare funziona. è da capire e sistemare se si vuole
      *
      */
     public String leggiComuneXML(String stringa_da_trovare) throws XMLStreamException{
@@ -382,5 +382,23 @@ public class GeneratoreCodiceFiscale {
         return false;
     }
 
+    public String controllaCodiciFiscaliXML(String stringa_da_trovare) throws XMLStreamException{
+        String esistenza = null;
+        boolean trovato = false;
+
+        XMLInputFactory xmlif = null;
+        XMLStreamReader xmlr = null;
+        try {
+            xmlif = XMLInputFactory.newInstance();
+            xmlr = xmlif.createXMLStreamReader("codiciFiscali.xml", new FileInputStream("codiciFiscali.xml"));
+        } catch (Exception e) {
+            System.out.println("Errore nell'inizializzazione del reader:");
+            System.out.println(e.getMessage());
+        }
+
+
+
+        return esistenza;
+    }
 
 }

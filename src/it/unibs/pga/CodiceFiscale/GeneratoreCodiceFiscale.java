@@ -26,6 +26,7 @@ public class GeneratoreCodiceFiscale {
         String stringa_preliminare = cognome + nome + data_nasctita + codice_comune;
         String carattere= letteraDiControllo(stringa_preliminare);
         String cog_nome = cognome + nome + data_nasctita + codice_comune + carattere;
+        controllaCodiciFiscaliXML(cog_nome);
         return cog_nome;
     }
 
@@ -355,53 +356,52 @@ public class GeneratoreCodiceFiscale {
 
     si può fare anche come boolean ma dipende da dove lo mettiamo
      */
-//    public String controllaCodiciFiscaliXML(String stringa_da_trovare) throws XMLStreamException{
-//        String esistenza = null;
-//        boolean trovato = false;
-//
-//        XMLInputFactory xmlif = null;
-//        XMLStreamReader xmlr = null;
-//        try {
-//            xmlif = XMLInputFactory.newInstance();
-//            xmlr = xmlif.createXMLStreamReader("codiciFiscali.xml", new FileInputStream("codiciFiscali.xml"));
-//        } catch (Exception e) {
-//            System.out.println("Errore nell'inizializzazione del reader:");
-//            System.out.println(e.getMessage());
-//        }
-//
-//        while (xmlr.hasNext() && !trovato){
-//            if (xmlr.getEventType()== XMLStreamConstants.START_ELEMENT && xmlr.getLocalName().equals("codici")) {
-//                while (!controlloComuni(xmlr)){
-//                    if (xmlr.getEventType() == XMLStreamConstants.START_ELEMENT && xmlr.getLocalName().equals("codice")) {
-//                        xmlr.next();
-//                        if (xmlr.getEventType()==XMLStreamConstants.CHARACTERS && xmlr.getText().equals(stringa_da_trovare)){
-//
-//                            do {
-//                                xmlr.next();
-//                            }while(xmlr.getEventType()!=XMLStreamConstants.CHARACTERS);
-//
-//                            esistenza += xmlr.getText();
-//                            trovato = true;
-//                            System.out.println(esistenza);
-//                            break;
-//
-//                        }
-//                    }
-//                    xmlr.next();
-//                }
-//            }
-//            xmlr.next();
-//        }
-//        System.out.println("ASSENTE");
-//        return esistenza;
-//    }
-//    public boolean controlloSu (XMLStreamReader xmlr){
-//        if (xmlr.getEventType()== XMLStreamConstants.END_ELEMENT){
-//            if (xmlr.getLocalName().equals("comune")){
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
+    public String controllaCodiciFiscaliXML(String stringa_da_trovare) throws XMLStreamException{
+        String esistenza = null;
+        boolean trovato = false;
+
+        XMLInputFactory xmlif = null;
+        XMLStreamReader xmlr = null;
+        try {
+            xmlif = XMLInputFactory.newInstance();
+            xmlr = xmlif.createXMLStreamReader("codiciFiscali.xml", new FileInputStream("codiciFiscali.xml"));
+        } catch (Exception e) {
+            System.out.println("Errore nell'inizializzazione del reader:");
+            System.out.println(e.getMessage());
+        }
+
+        while (xmlr.hasNext() && !trovato){
+            if (xmlr.getEventType()== XMLStreamConstants.START_ELEMENT && xmlr.getLocalName().equals("codici")) {
+                while (!controlloSuCodici(xmlr)){
+                    if(xmlr.getEventType()==XMLStreamConstants.CHARACTERS && xmlr.getText().equals(stringa_da_trovare)) {
+//                        do{
+//                            xmlr.next();
+//                        }while(!controlloCodiceComune(xmlr));
+
+                        esistenza = xmlr.getText();
+                        trovato = true;
+
+                        break;
+                    }
+                    xmlr.next();
+                }
+            }
+            xmlr.next();
+        }
+        if(trovato == false) {
+            System.out.println("ASSENTE");
+        }else{
+            System.out.println(esistenza);
+        }
+        return esistenza;
+    }
+    public boolean controlloSuCodici (XMLStreamReader xmlr){
+        if (xmlr.getEventType()== XMLStreamConstants.END_ELEMENT){
+            if (xmlr.getLocalName().equals("codici")){
+                return true;
+            }
+        }
+        return false;
+    }
 
 }

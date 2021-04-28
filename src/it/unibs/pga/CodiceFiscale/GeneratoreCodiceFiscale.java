@@ -43,7 +43,7 @@ public class GeneratoreCodiceFiscale {
         //qual'ora non ci fossero abbastanza consonati prendo la prima vocale e qual'ora le lettere non bastassero
         //metto una X
 
-        for(int i = 0; i < cognome.length(); i++){
+        for(int i = 0; i < cognome.length() && cognomeCF.length() < 3; i++){
             if (gs.controlloConsonanti(cognome.charAt(i))){
                 cognomeCF+=cognome.charAt(i);
             }
@@ -84,7 +84,7 @@ public class GeneratoreCodiceFiscale {
 
         if (conta_consonanti >= 4){
             int conto = 0; //mi serve per contare a che consonante sono, in modo tale da saltare la seconda
-            for (int k = 0; k < nome.length(); k++){
+            for (int k = 0; k < nome.length() && nomeCF.length() < 3; k++){
                 if (gs.controlloConsonanti(nome.charAt(k))){
                     if (conto == 1){
                         conto++;
@@ -95,7 +95,7 @@ public class GeneratoreCodiceFiscale {
                 }
             }
         }else {
-            for (int i = 0; i < nome.length(); i++) {
+            for (int i = 0; i < nome.length() && nomeCF.length() < 3; i++) {
                 if (gs.controlloConsonanti(nome.charAt(i))) {
                     nomeCF += nome.charAt(i);
                 }
@@ -143,49 +143,38 @@ public class GeneratoreCodiceFiscale {
         String giorno_nascita = String.valueOf(data.charAt(8)) + String.valueOf(data.charAt(9));
         //String data_giorno = giorno(sesso, giorno_nascita);
         Integer gg = Integer.valueOf(giorno_nascita);
-        String giorno = ritornaData(sesso, gg);
+        String giorno = giorno(sesso, data);
         codice_nascita = anno + codice_mese + giorno;
         return codice_nascita;
     }
 
-    public String ritornaData(String sesso, int giorno){
-        if (sesso.charAt(0) == 'F'){
-            giorno = giorno + 40;
-        }
-        String data_gg = String.valueOf(giorno);
-        return data_gg;
-    }
-
-    /*
-    metodi che mancano
-    - prendi_nascita: da input si legge la data di nascita.
-      prima si prendono le ultime le due cifre dell'anno;
-       poi prendiamo il mese e attrraverso un metodo che ci dice la lettera del mese a seconda del numeroe
-       infine si prende il giorno e passa attraverso un metodo che ci fornirà la data a seconda del sesso.
-       lo si ritorna come una stringa che andrà ad unirsi alla mstringa finale
-    - metodi di supporto :
-     Metodo per il mese: passandogli un intero ti ritorna, attraverso un if o uno switch, la lettera del mese a cui corrisponde
-
-     Metodo per il giorno: prende in input il sesso della persona in questione e in base a quello se è maschio non fa
-     nulla e ci ritorna il dato così com'era
-     se femmina gli aggiunge 40
+    /**
+     *metodo che prende sia il sesso della persona sia la sua data, attraverso il metodo split dividiamo la data rispettivamente
+     * parti[0] contiene l'anno, parti[1] il mese, parti[2] contiene il giorno che prenderem trasformandolo in un intero per
+     * poter aggiungere +40 in caso si stia parlando di una femmina o nel caso
+     * @param sesso
+     * @param data
+     * @return
      */
-    public String giorno(char sesso, String data){
+    public String giorno(String sesso, String data){
         String[] parti = data.split("-");
         String DataGiorno = parti[2];
         int RisultatoIntero = Integer.parseInt(DataGiorno);
-        if(sesso == 'F')
+        if(sesso.equals("F"))
             RisultatoIntero = RisultatoIntero + 40;
 
         String Risultato = String.valueOf(RisultatoIntero);
         return Risultato;
     }
 
-    /*
-    Metodo per i comuni di nascita:
-    da input si prende il comune che entra  in un controllo nella lista dei comuni xml
-    e ci ritorna il codice del comune
-    poi ritornerà la solita stringa che andrà alla fine ad unirsi al cf
+    /**
+     * Metodo per i comuni di nascita:
+     *     da input si prende il comune che entra  in un controllo nella lista dei comuni xml
+     *     e ci ritorna il codice del comune
+     *     poi ritornerà la solita stringa che andrà alla fine ad unirsi al cf
+     * @param id
+     * @return
+     * @throws XMLStreamException
      */
     public String prendiComune(String id) throws XMLStreamException{
         String comune_di_nascita = leggiDatoXML(id, "comune_nascita");
@@ -238,49 +227,6 @@ public class GeneratoreCodiceFiscale {
 //        return codice_fiscale;
     }
 
-
-    /**
-     * NON TOCCARE
-     *
-     * -Alfiere
-     */
-   public void XMLABBOZZO() throws XMLStreamException {
-
-       XMLInputFactory xmlif = null;
-       XMLStreamReader xmlr = null;
-       try {
-           xmlif = XMLInputFactory.newInstance();
-           xmlr = xmlif.createXMLStreamReader("codiciFiscali.xml", new FileInputStream("codiciFiscali.xml"));
-       } catch (Exception e) {
-           System.out.println("Errore nell'inizializzazione del reader:");
-           System.out.println(e.getMessage());
-       }
-       while (xmlr.hasNext()) { // continua a leggere finché ha eventi a disposizione
-           switch (xmlr.getEventType()) { // switch sul tipo di evento
-               case XMLStreamConstants.START_DOCUMENT: // inizio del documento: stampa che inizia il documento
-                   System.out.println("Start Read Doc " + "codiciFiscali.xml");
-                   break;
-               case XMLStreamConstants.START_ELEMENT: // inizio di un elemento: stampa il nome del tag e i suoi attributi
-                   System.out.println("Tag " + xmlr.getLocalName());
-                   for (int i = 0; i < xmlr.getAttributeCount(); i++)
-                       System.out.printf(" => attributo %s->%s%n", xmlr.getAttributeLocalName(i), xmlr.getAttributeValue(i));
-                   break;
-               case XMLStreamConstants.END_ELEMENT: // fine di un elemento: stampa il nome del tag chiuso
-                   System.out.println("END-Tag " + xmlr.getLocalName());
-                   break;
-               case XMLStreamConstants.COMMENT:
-                   System.out.println("// commento " + xmlr.getText());
-                   break; // commento: ne stampa il contenuto
-               case XMLStreamConstants.CHARACTERS: // content all’interno di un elemento: stampa il testo
-                   if (xmlr.getText().trim().length() > 0) // controlla se il testo non contiene solo spazi
-                       System.out.println("-> " + xmlr.getText());
-                   break;
-           }
-           xmlr.next();
-       }
-
-   }
-
     /**
      * NON TOCCARE
      *
@@ -310,7 +256,8 @@ public class GeneratoreCodiceFiscale {
        while (xmlr.hasNext() && !trovato){
 
           if (xmlr.getEventType()==XMLStreamConstants.START_ELEMENT && xmlr.getAttributeCount()>0 && xmlr.getAttributeValue(0).equals(id)) {//START_ELEMENT dà come risultato un intero
-              for (int j = 0; j < MASSIMO_ELEMENTI_PERSONA; j++) {
+              xmlr.next();
+              for (int j=0; j<MASSIMO_ELEMENTI_PERSONA; j++) {
                   xmlr.next();
 
                   if (xmlr.getEventType()==1 && xmlr.getLocalName().equals(elemento_necessario)){

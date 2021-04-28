@@ -4,7 +4,7 @@ import javax.xml.stream.XMLStreamException;
 
 public class Main {
 
-    public static final int NUMERO_PERSONE = 1;
+    public static final int NUMERO_PERSONE = 3;
 
     public static void main(String[] args) throws XMLStreamException {
 

@@ -12,7 +12,7 @@ public class Gestione{
      */
     public boolean controlloConsonanti(char lettera){
         boolean corretto = true;
-        if (lettera == 'A' || lettera == 'E' || lettera == 'I' || lettera == 'O' || lettera == 'U'){
+        if (lettera == 'A' || lettera == 'E' || lettera == 'I' || lettera == 'O' || lettera == 'U' || lettera == ' '){
             corretto = false;
         }
         return corretto;

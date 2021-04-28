@@ -8,8 +8,6 @@ import java.io.FileInputStream;
 
 public class GeneratoreCodiceFiscale {
 
-    public static final int MASSIMO_ELEMENTI_PERSONA = 18;//bisgna capire perchè 18 è il valore massimo esatto
-
     /**
      * NON TOCCARE
      * <br> questo è il metodo in cui andremo a creare il codice fiscale
@@ -28,7 +26,6 @@ public class GeneratoreCodiceFiscale {
         String stringa_preliminare = cognome + nome + data_nasctita + codice_comune;
         String carattere= letteraDiControllo(stringa_preliminare);
         String cog_nome = cognome + nome + data_nasctita + codice_comune + carattere;
-
         return cog_nome;
     }
 
@@ -145,6 +142,7 @@ public class GeneratoreCodiceFiscale {
         Integer gg = Integer.valueOf(giorno_nascita);
         String giorno = giorno(sesso, data);
         codice_nascita = anno + codice_mese + giorno;
+
         return codice_nascita;
     }
 
@@ -159,13 +157,17 @@ public class GeneratoreCodiceFiscale {
      */
     public String giorno(String sesso, String data){
         String[] parti = data.split("-");
-        String DataGiorno = parti[2];
-        int RisultatoIntero = Integer.parseInt(DataGiorno);
+        String data_giorno = parti[2];
+    //       String DataGiorno = parti[2];
+        int risultato_intero = Integer.parseInt(data_giorno);
         if(sesso.equals("F"))
-            RisultatoIntero = RisultatoIntero + 40;
+            risultato_intero = risultato_intero + 40;
 
-        String Risultato = String.valueOf(RisultatoIntero);
-        return Risultato;
+        String risultato = String.valueOf(risultato_intero);
+        if (risultato.length()== 1){
+            risultato= "0"+ risultato;
+        }
+        return risultato;
     }
 
     /**
@@ -263,10 +265,6 @@ public class GeneratoreCodiceFiscale {
 
                   if (xmlr.getEventType()==XMLStreamConstants.START_ELEMENT && xmlr.getLocalName().equals(elemento_necessario)){
                       xmlr.next();
-                      xmlr.next();
-                      xmlr.next();
-                      xmlr.next();
-                      xmlr.next();
                       carattere_necessario= xmlr.getText();
                       //è possibile andare a cancellare un elemento dal XML dato?
                       trovato= true;
@@ -316,10 +314,11 @@ public class GeneratoreCodiceFiscale {
                     if (xmlr.getEventType() == XMLStreamConstants.START_ELEMENT && xmlr.getLocalName().equals("nome")) {
                         xmlr.next();
                         if (xmlr.getEventType()==XMLStreamConstants.CHARACTERS && xmlr.getText().equals(stringa_da_trovare)){
-                            xmlr.next();
-                            xmlr.next();
-                            xmlr.next();
-                            xmlr.next();
+
+                            do{
+                                xmlr.next();
+                            }while(!controlloCodiceComune(xmlr));
+
                             codice_comune += xmlr.getText();
                             trovato = true;
                             break;
@@ -343,27 +342,66 @@ public class GeneratoreCodiceFiscale {
         return false;
     }
 
+    public boolean controlloCodiceComune(XMLStreamReader xmlr){
+        if (xmlr.getEventType()==XMLStreamConstants.CHARACTERS && xmlr.getText().trim().length() > 0) {
+            return true;
+        }
+        return false;
+    }
+
 
     /*
     DA FINIRE COGLIONE MARIO
+
+    si può fare anche come boolean ma dipende da dove lo mettiamo
      */
-    public String controllaCodiciFiscaliXML(String stringa_da_trovare) throws XMLStreamException{
-        String esistenza = null;
-        boolean trovato = false;
-
-        XMLInputFactory xmlif = null;
-        XMLStreamReader xmlr = null;
-        try {
-            xmlif = XMLInputFactory.newInstance();
-            xmlr = xmlif.createXMLStreamReader("codiciFiscali.xml", new FileInputStream("codiciFiscali.xml"));
-        } catch (Exception e) {
-            System.out.println("Errore nell'inizializzazione del reader:");
-            System.out.println(e.getMessage());
-        }
-
-
-
-        return esistenza;
-    }
+//    public String controllaCodiciFiscaliXML(String stringa_da_trovare) throws XMLStreamException{
+//        String esistenza = null;
+//        boolean trovato = false;
+//
+//        XMLInputFactory xmlif = null;
+//        XMLStreamReader xmlr = null;
+//        try {
+//            xmlif = XMLInputFactory.newInstance();
+//            xmlr = xmlif.createXMLStreamReader("codiciFiscali.xml", new FileInputStream("codiciFiscali.xml"));
+//        } catch (Exception e) {
+//            System.out.println("Errore nell'inizializzazione del reader:");
+//            System.out.println(e.getMessage());
+//        }
+//
+//        while (xmlr.hasNext() && !trovato){
+//            if (xmlr.getEventType()== XMLStreamConstants.START_ELEMENT && xmlr.getLocalName().equals("codici")) {
+//                while (!controlloComuni(xmlr)){
+//                    if (xmlr.getEventType() == XMLStreamConstants.START_ELEMENT && xmlr.getLocalName().equals("codice")) {
+//                        xmlr.next();
+//                        if (xmlr.getEventType()==XMLStreamConstants.CHARACTERS && xmlr.getText().equals(stringa_da_trovare)){
+//
+//                            do {
+//                                xmlr.next();
+//                            }while(xmlr.getEventType()!=XMLStreamConstants.CHARACTERS);
+//
+//                            esistenza += xmlr.getText();
+//                            trovato = true;
+//                            System.out.println(esistenza);
+//                            break;
+//
+//                        }
+//                    }
+//                    xmlr.next();
+//                }
+//            }
+//            xmlr.next();
+//        }
+//        System.out.println("ASSENTE");
+//        return esistenza;
+//    }
+//    public boolean controlloSu (XMLStreamReader xmlr){
+//        if (xmlr.getEventType()== XMLStreamConstants.END_ELEMENT){
+//            if (xmlr.getLocalName().equals("comune")){
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
 
 }

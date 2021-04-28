@@ -149,9 +149,10 @@ public class GeneratoreCodiceFiscale {
     }
 
     /**
-     *metodo che prende sia il sesso della persona sia la sua data, attraverso il metodo split dividiamo la data rispettivamente
-     * parti[0] contiene l'anno, parti[1] il mese, parti[2] contiene il giorno che prenderemmo trasformandolo in un intero per
-     * poter aggiungere +40 in caso si stia parlando di una femmina o nel caso di un maschio non farà nulla.
+     *metodo che prende sia il sesso della persona sia la sua data di nascita, attraverso il metodo split dividiamo la data rispettivamente
+     * parti[0] contiene l'anno, parti[1] il mese, parti[2] contiene il giorno che prenderemo trasformandolo in un intero per
+     * poter aggiungere +40 in caso si stia parlando di una femmina o nel caso di un maschio non aggiungere nulla.
+     * fatto ciò viene ritrasformato in una stringa per poterlo restituire.
      * @param sesso
      * @param data
      * @return

@@ -150,8 +150,8 @@ public class GeneratoreCodiceFiscale {
 
     /**
      *metodo che prende sia il sesso della persona sia la sua data, attraverso il metodo split dividiamo la data rispettivamente
-     * parti[0] contiene l'anno, parti[1] il mese, parti[2] contiene il giorno che prenderem trasformandolo in un intero per
-     * poter aggiungere +40 in caso si stia parlando di una femmina o nel caso
+     * parti[0] contiene l'anno, parti[1] il mese, parti[2] contiene il giorno che prenderemmo trasformandolo in un intero per
+     * poter aggiungere +40 in caso si stia parlando di una femmina o nel caso di un maschio non farà nulla.
      * @param sesso
      * @param data
      * @return
@@ -257,10 +257,14 @@ public class GeneratoreCodiceFiscale {
 
           if (xmlr.getEventType()==XMLStreamConstants.START_ELEMENT && xmlr.getAttributeCount()>0 && xmlr.getAttributeValue(0).equals(id)) {//START_ELEMENT dà come risultato un intero
               xmlr.next();
-              for (int j=0; j<MASSIMO_ELEMENTI_PERSONA; j++) {
+              while (!controlloInput(xmlr)) {
                   xmlr.next();
 
-                  if (xmlr.getEventType()==1 && xmlr.getLocalName().equals(elemento_necessario)){
+                  if (xmlr.getEventType()==XMLStreamConstants.START_ELEMENT && xmlr.getLocalName().equals(elemento_necessario)){
+                      xmlr.next();
+                      xmlr.next();
+                      xmlr.next();
+                      xmlr.next();
                       xmlr.next();
                       carattere_necessario= xmlr.getText();
                       //è possibile andare a cancellare un elemento dal XML dato?
@@ -274,6 +278,15 @@ public class GeneratoreCodiceFiscale {
        }
        return carattere_necessario;
    }
+
+    public boolean controlloInput (XMLStreamReader xmlr){
+        if (xmlr.getEventType()== XMLStreamConstants.END_ELEMENT){
+            if (xmlr.getLocalName().equals("persona")){
+                return true;
+            }
+        }
+        return false;
+    }
 
 
     /**
@@ -329,6 +342,10 @@ public class GeneratoreCodiceFiscale {
         return false;
     }
 
+
+    /*
+    DA FINIRE COGLIONE MARIO
+     */
     public String controllaCodiciFiscaliXML(String stringa_da_trovare) throws XMLStreamException{
         String esistenza = null;
         boolean trovato = false;

@@ -8,8 +8,9 @@ public class Main {
 
     public static void main(String[] args) throws XMLStreamException {
 
+
 //        GeneratoreCodiceFiscale gf = new GeneratoreCodiceFiscale();
-//        String codice = "CTTFNC01D60B157";
+//        String codice = "MSSGPP40D27A177" ;
 //        String codice_trasformato = gf.letteraDiControllo(codice);
 //        System.out.println(codice_trasformato);
 

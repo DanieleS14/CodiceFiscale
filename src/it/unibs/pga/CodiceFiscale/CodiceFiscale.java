@@ -84,7 +84,15 @@ public class CodiceFiscale {
                     break;
                 }
             }else if(i == 15){
-                if(codice_fiscale.charAt(i) < 'A' || codice_fiscale.charAt(i) > 'Z'){
+                GeneratoreCodiceFiscale gcf = new GeneratoreCodiceFiscale();
+                if(codice_fiscale.charAt(i) >= 'A' && codice_fiscale.charAt(i) <= 'Z'){
+                    if(!gcf.letteraDiControllo(codice_fiscale).equals(String.valueOf(codice_fiscale.charAt(15)))){
+                        valido = false;
+                        //return valido;
+                        break;
+                    }
+
+                }else{
                     valido = false;
                     //return valido;
                     break;

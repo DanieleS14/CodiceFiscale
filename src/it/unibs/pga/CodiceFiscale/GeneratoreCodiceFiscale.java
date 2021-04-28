@@ -5,7 +5,6 @@ import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamException;
 import java.io.FileInputStream;
-import java.io.FileReader;
 
 public class GeneratoreCodiceFiscale {
 
@@ -25,7 +24,11 @@ public class GeneratoreCodiceFiscale {
         String cognome= prendi_cognome(id_string);
         String nome = prendi_nome(id_string);
         String data_nasctita = prendiDataNascita(id_string);
-        String cog_nome = cognome + nome + data_nasctita;
+        String codice_comune = prendiComune(id_string);
+        String stringa_preliminare = cognome + nome + data_nasctita + codice_comune;
+        String carattere= letteraDiControllo(stringa_preliminare);
+        String cog_nome = cognome + nome + data_nasctita + codice_comune + carattere;
+
         return cog_nome;
     }
 
@@ -184,11 +187,12 @@ public class GeneratoreCodiceFiscale {
     e ci ritorna il codice del comune
     poi ritornerà la solita stringa che andrà alla fine ad unirsi al cf
      */
-    public String ritornaComune(String id) throws XMLStreamException{
+    public String prendiComune(String id) throws XMLStreamException{
         String comune_di_nascita = leggiDatoXML(id, "comune_nascita");
         //metodo di ricerca inserendo una stringa mi deve tornare ciò che mi serve
         //sarà comune perchè mi serve in più parti
-
+        String codice_comune = leggiComuneXML(comune_di_nascita);
+        return codice_comune;
     }
 
     /**
@@ -196,13 +200,13 @@ public class GeneratoreCodiceFiscale {
      * @param stringa_da_cercare
      * @return
      */
-    public String ricerca(String stringa_da_cercare){
-        boolean trovato = false;
-        do{
-            String comune = leggiDatoXML(id)
-            if(stringa_da_cercare.equals())
-        }while(!trovato /*|| o sono finiti i comuni ma non penso sia da contemplare*/ );
-    }
+//    public String ricerca(String stringa_da_cercare){
+//        boolean trovato = false;
+//        do{
+//            String comune = leggiDatoXML(id)
+//            if(stringa_da_cercare.equals())
+//        }while(!trovato /*|| o sono finiti i comuni ma non penso sia da contemplare*/ );
+//    }
 
 
    // public String comuni(){
@@ -228,10 +232,10 @@ public class GeneratoreCodiceFiscale {
         }
         valore = valore % 26;
         char carattere_controllo = gs.tabellaConversione(valore);
-//        String caratterino_finale = String.valueOf(carattere_controllo);
-//        return caratterino_finale;
-        codice_fiscale += carattere_controllo;
-        return codice_fiscale;
+        String caratterino_finale = String.valueOf(carattere_controllo);
+        return caratterino_finale;
+//        codice_fiscale += carattere_controllo;
+//        return codice_fiscale;
     }
 
 
@@ -305,7 +309,7 @@ public class GeneratoreCodiceFiscale {
        }
        while (xmlr.hasNext() && !trovato){
 
-          if (xmlr.getEventType()==1 && xmlr.getAttributeCount()>0 && xmlr.getAttributeValue(0).equals(id)) {//START_ELEMENT dà come risultato un intero
+          if (xmlr.getEventType()==XMLStreamConstants.START_ELEMENT && xmlr.getAttributeCount()>0 && xmlr.getAttributeValue(0).equals(id)) {//START_ELEMENT dà come risultato un intero
               for (int j = 0; j < MASSIMO_ELEMENTI_PERSONA; j++) {
                   xmlr.next();
 
@@ -329,7 +333,7 @@ public class GeneratoreCodiceFiscale {
      * è UNA PROVA SOLO STO TENTANDO DI CAPIRE COME FUNZIONA
      *
      */
-    public String leggiComuneXML(String stringa_da_trovare, String elemento_necessario) throws XMLStreamException{
+    public String leggiComuneXML(String stringa_da_trovare) throws XMLStreamException{
 
         //String carattere_necessario= null;
         boolean trovato = false;
@@ -343,23 +347,40 @@ public class GeneratoreCodiceFiscale {
             System.out.println("Errore nell'inizializzazione del reader:");
             System.out.println(e.getMessage());
         }
+
         String codice_comune = "";
         while (xmlr.hasNext() && !trovato){
-            if (xmlr.getEventType()==1) {
-                for (int i = 0; i < xmlr.getAttributeCount(); i++){
-                    if (xmlr.getEventType()==1 && xmlr.getLocalName().equals(elemento_necessario)
-                            && xmlr.getText().equals(stringa_da_trovare)) {
+            if (xmlr.getEventType()== XMLStreamConstants.START_ELEMENT && xmlr.getLocalName().equals("comune")) {
+                while (!controlloComuni(xmlr)){
+                    if (xmlr.getEventType() == XMLStreamConstants.START_ELEMENT && xmlr.getLocalName().equals("nome")) {
                         xmlr.next();
-                        xmlr.next();
-                        codice_comune = xmlr.getText();
-                        trovato = true;
-                        break;
+                        if (xmlr.getEventType()==XMLStreamConstants.CHARACTERS && xmlr.getText().equals(stringa_da_trovare)){
+                            xmlr.next();
+                            xmlr.next();
+                            xmlr.next();
+                            xmlr.next();
+                            codice_comune += xmlr.getText();
+                            trovato = true;
+                            break;
+                        }
                     }
+                    xmlr.next();
                 }
-
             }
+            xmlr.next();
         }
-            return codice_comune;
+        return codice_comune;
 
     }
+
+    public boolean controlloComuni (XMLStreamReader xmlr){
+        if (xmlr.getEventType()== XMLStreamConstants.END_ELEMENT){
+            if (xmlr.getLocalName().equals("comune")){
+                return true;
+            }
+        }
+        return false;
+    }
+
+
 }

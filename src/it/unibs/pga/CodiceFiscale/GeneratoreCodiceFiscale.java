@@ -26,7 +26,7 @@ public class GeneratoreCodiceFiscale {
         String stringa_preliminare = cognome + nome + data_nasctita + codice_comune;
         String carattere= letteraDiControllo(stringa_preliminare);
         String cog_nome = cognome + nome + data_nasctita + codice_comune + carattere;
-        controllaCodiciFiscaliXML(cog_nome);
+        //controllaCodiciFiscaliXML(cog_nome);
         return cog_nome;
     }
 
@@ -356,7 +356,8 @@ public class GeneratoreCodiceFiscale {
 
     si può fare anche come boolean ma dipende da dove lo mettiamo
      */
-    public String controllaCodiciFiscaliXML(String stringa_da_trovare) throws XMLStreamException{
+    public boolean controllaCodiciFiscaliXML(String stringa_da_trovare) throws XMLStreamException{
+        boolean spaiato = true;
         String esistenza = null;
         boolean trovato = false;
 
@@ -371,37 +372,36 @@ public class GeneratoreCodiceFiscale {
         }
 
         while (xmlr.hasNext() && !trovato){
-            if (xmlr.getEventType()== XMLStreamConstants.START_ELEMENT && xmlr.getLocalName().equals("codici")) {
-                while (!controlloSuCodici(xmlr)){
-                    if(xmlr.getEventType()==XMLStreamConstants.CHARACTERS && xmlr.getText().equals(stringa_da_trovare)) {
-//                        do{
-//                            xmlr.next();
-//                        }while(!controlloCodiceComune(xmlr));
+            if (xmlr.getEventType()==XMLStreamConstants.CHARACTERS && xmlr.getText().equals(stringa_da_trovare)) {
+//                while (!controlloSuCodici(xmlr)){
+//                    if(xmlr.getEventType()==XMLStreamConstants.CHARACTERS && xmlr.getText().equals(stringa_da_trovare)) {
+////                        do{
+////                            xmlr.next();
+////                        }while(!controlloCodiceComune(xmlr));
+//
+//                        esistenza = xmlr.getText();
+//                        trovato = true;
+//
+//                        break;
+//                    }
+//                    xmlr.next();
+//                }
+                esistenza = xmlr.getText();
+                spaiato = false;
+                trovato = true;
 
-                        esistenza = xmlr.getText();
-                        trovato = true;
-
-                        break;
-                    }
-                    xmlr.next();
-                }
+                break;
             }
             xmlr.next();
         }
         if(trovato == false) {
             System.out.println("ASSENTE");
+
         }else{
             System.out.println(esistenza);
         }
-        return esistenza;
+        return spaiato;
     }
-    public boolean controlloSuCodici (XMLStreamReader xmlr){
-        if (xmlr.getEventType()== XMLStreamConstants.END_ELEMENT){
-            if (xmlr.getLocalName().equals("codici")){
-                return true;
-            }
-        }
-        return false;
-    }
+
 
 }

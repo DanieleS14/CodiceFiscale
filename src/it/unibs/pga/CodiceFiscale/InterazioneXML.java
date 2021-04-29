@@ -1,7 +1,7 @@
 package it.unibs.pga.CodiceFiscale;
 
-import javax.xml.stream.XMLOutputFactory;
-import javax.xml.stream.XMLStreamWriter;
+import javax.xml.stream.*;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
 public class InterazioneXML {
@@ -44,4 +44,37 @@ public class InterazioneXML {
 //
 //
 //    }
+
+    public void leggiCodiceXML() throws XMLStreamException {
+
+        String carattere_necessario= null;
+        boolean trovato = false;
+        int corretti = 0;
+        XMLInputFactory xmlif = null;
+        XMLStreamReader xmlr = null;
+        try {
+            xmlif = XMLInputFactory.newInstance();
+            xmlr = xmlif.createXMLStreamReader("codiciFiscali.xml", new FileInputStream("codiciFiscali.xml"));
+        } catch (Exception e) {
+            System.out.println("Errore nell'inizializzazione del reader:");
+            System.out.println(e.getMessage());
+        }
+        while (xmlr.hasNext() && !trovato){
+
+            if (xmlr.getEventType()==XMLStreamConstants.START_ELEMENT && xmlr.getLocalName().equals("codice")) {//START_ELEMENT dà come risultato un intero
+                xmlr.next();
+                if(xmlr.getText().trim().length() > 0){
+                    CodiceFiscale cf = new CodiceFiscale(xmlr.getText());
+                    if(cf.codiceValido(cf.getCodice_fiscale())){
+                        corretti++;
+                    }
+                }
+
+
+            }
+            xmlr.next();
+        }
+        System.out.println(corretti);
+        //return carattere_necessario;
+    }
 }

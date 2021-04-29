@@ -4,10 +4,12 @@ import javax.xml.stream.XMLStreamException;
 
 public class Main {
 
-    public static final int NUMERO_PERSONE = 10;
+    public static final int NUMERO_PERSONE = 1000;
 
     public static void main(String[] args) throws XMLStreamException {
 
+        InterazioneXML xm = new InterazioneXML();
+        xm.leggiCodiceXML();
 
 //        GeneratoreCodiceFiscale gf = new GeneratoreCodiceFiscale();
 //        String codice = "MSSGPP40D27A177" ;
@@ -19,12 +21,13 @@ public class Main {
          *
          * -Alfiere
          */
-        for (int i = 0; i< NUMERO_PERSONE; i++){
-            GeneratoreCodiceFiscale gcf= new GeneratoreCodiceFiscale();
-            String cod_prov= gcf.generatore(i);
-            System.out.println(cod_prov);
-            //CodiceFiscale cf= new CodiceFiscale(cod_prov);
-        }
+//        for (int i = 0; i< NUMERO_PERSONE; i++){
+//            GeneratoreCodiceFiscale gcf= new GeneratoreCodiceFiscale();
+//            String cod_prov= gcf.generatore(i);
+//            System.out.println(cod_prov);
+//            gcf.controllaCodiciFiscaliXML(cod_prov);
+//            //CodiceFiscale cf= new CodiceFiscale(cod_prov);
+//        }
 
 
 

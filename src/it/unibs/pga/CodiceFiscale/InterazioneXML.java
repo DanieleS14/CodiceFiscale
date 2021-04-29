@@ -3,6 +3,7 @@ package it.unibs.pga.CodiceFiscale;
 import javax.xml.stream.*;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamReader;
@@ -11,7 +12,7 @@ import javax.xml.stream.XMLStreamException;
 public class InterazioneXML {
 
 
-    public void ScritturaXML(int num_pers) {
+    public void ScritturaXML(int num_pers) throws XMLStreamException {
 
         XMLOutputFactory xmlof = null;
         XMLStreamWriter xmlw = null;
@@ -24,6 +25,11 @@ public class InterazioneXML {
             System.out.println(e.getMessage());
         }
 
+        GeneratoreCodiceFiscale gcf = new GeneratoreCodiceFiscale();
+
+        ArrayList <String> accoppiati = new ArrayList<>();
+        ArrayList <String> invalidi = leggiCodiceXML();
+        ArrayList <String> spaiati = new ArrayList<>();
 
         try { // blocco try per raccogliere eccezioni
 
@@ -33,13 +39,68 @@ public class InterazioneXML {
             xmlw.writeAttribute("numero", Integer.toString(num_pers));
             for (int i = 0; i< num_pers; i++){
 
+                xmlw.writeStartElement("persona");
+                xmlw.writeAttribute("id", Integer.toString(i));
+                String id_string= String.valueOf(i);
+
+                String nome = leggiDatoXML(id_string, "nome");
+                xmlw.writeStartElement("nome");
+                xmlw.writeCharacters(nome);
+                xmlw.writeEndElement();
+
+                String cognome = leggiDatoXML(id_string, "cognome");
+                xmlw.writeStartElement("cognome");
+                xmlw.writeCharacters(cognome);
+                xmlw.writeEndElement();
+
+                String sesso = leggiDatoXML(id_string, "sesso");
+                xmlw.writeStartElement("sesso");
+                xmlw.writeCharacters(sesso);
+                xmlw.writeEndElement();
+
+                String comune = leggiDatoXML(id_string, "comune_nascita");
+                xmlw.writeStartElement("comune_nascita");
+                xmlw.writeCharacters(comune);
+                xmlw.writeEndElement();
+
+                String data = leggiDatoXML(id_string, "data_nascita");
+                xmlw.writeStartElement("data_nascita");
+                xmlw.writeCharacters(data);
+                xmlw.writeEndElement();
+
+                String codice = gcf.generatore(i);
+                xmlw.writeStartElement("codice_fiscale");
+                if(controllaCodiciFiscaliXML(codice)){
+                    xmlw.writeCharacters(codice);
+                    accoppiati.add(codice);
+                }else{
+                    xmlw.writeCharacters("ASSENTE");
+                }
+                xmlw.writeEndElement();
+
+                xmlw.writeEndElement();
             }
+
+            xmlw.writeStartElement("codici");
+            int numero_invalidi = invalidi.size();
+
+            xmlw.writeStartElement("invalidi");
+            xmlw.writeAttribute("numero", Integer.toString(numero_invalidi));
+            for(int i = 0; i < numero_invalidi; i++){
+                xmlw.writeStartElement("codice");
+                xmlw.writeCharacters(invalidi.get(i));
+                xmlw.writeEndElement();
+            }
+            xmlw.writeEndElement();
+
+            xmlw.writeEndElement(); //chiude codici
             xmlw.writeEndElement();
             xmlw.writeEndDocument();
 
         } catch (Exception e) { // se c’è un errore viene eseguita questa parte
             System.out.println("Errore nella scrittura");
         }
+
 
 
     }
@@ -60,9 +121,9 @@ public class InterazioneXML {
 
 
 
-    public void leggiCodiceXML() throws XMLStreamException {
+    public ArrayList <String> leggiCodiceXML() throws XMLStreamException {
 
-        String carattere_necessario= null;
+        ArrayList <String> codici_invalidi = new ArrayList<>();
         boolean trovato = false;
         int corretti = 0;
         XMLInputFactory xmlif = null;
@@ -80,8 +141,8 @@ public class InterazioneXML {
                 xmlr.next();
                 if(xmlr.getText().trim().length() > 0){
                     CodiceFiscale cf = new CodiceFiscale(xmlr.getText());
-                    if(cf.codiceValido(cf.getCodice_fiscale())){
-                        corretti++;
+                    if(!cf.codiceValido(cf.getCodice_fiscale())){
+                        codici_invalidi.add(cf.getCodice_fiscale());
                     }
                 }
 
@@ -89,13 +150,14 @@ public class InterazioneXML {
             }
             xmlr.next();
         }
-        System.out.println(corretti);
+        return codici_invalidi;
+        //System.out.println(corretti);
         //return carattere_necessario;
     }
 
 
     public boolean controllaCodiciFiscaliXML(String stringa_da_trovare) throws XMLStreamException{
-        boolean spaiato = true;
+        //boolean spaiato = true;
         String esistenza = null;
         boolean trovato = false;
 
@@ -112,7 +174,7 @@ public class InterazioneXML {
         while (xmlr.hasNext() && !trovato){
             if (xmlr.getEventType()==XMLStreamConstants.CHARACTERS && xmlr.getText().equals(stringa_da_trovare)) {
                 esistenza = xmlr.getText();
-                spaiato = false;
+                //spaiato = false;
                 trovato = true;
 
                 break;
@@ -120,12 +182,12 @@ public class InterazioneXML {
             xmlr.next();
         }
         if(trovato == false) {
-            System.out.println("ASSENTE");
+            //System.out.println("ASSENTE");
 
         }else{
-            System.out.println(esistenza);
+            //System.out.println(esistenza);
         }
-        return spaiato;
+        return trovato;
     }
 
 

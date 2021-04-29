@@ -23,7 +23,7 @@ public class GeneratoreCodiceFiscale {
         String stringa_preliminare = cognome + nome + data_nasctita + codice_comune;
         String carattere= letteraDiControllo(stringa_preliminare);
         String cog_nome = cognome + nome + data_nasctita + codice_comune + carattere;
-        //controllaCodiciFiscaliXML(cog_nome);
+
         return cog_nome;
     }
 
@@ -170,5 +170,7 @@ public class GeneratoreCodiceFiscale {
 
         return caratterino_finale;
     }
+
+
 
 }

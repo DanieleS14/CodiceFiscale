@@ -43,7 +43,7 @@ public class CodiceFiscale {
         if (codice_fiscale.length() != 16){
             valido = false;
             //return valido;
-            System.out.println("non valido");
+            //System.out.println("non valido");
             return valido;
         }
         for (int i = 0; i < 16; i++){
@@ -100,11 +100,11 @@ public class CodiceFiscale {
             }
         }
         //valido = true;
-        if(valido){
-            System.out.println("codice valido");
-        }else{
-            System.out.println("Codice non valido");
-        }
+//        if(valido){
+//            //System.out.println("codice valido");
+//        }else{
+//            //System.out.println("Codice non valido");
+//        }
         return valido;
     }
 

@@ -9,8 +9,10 @@ public class Gestione{
      * bisogna prendere le prime tre consonati. Quindi dato il nome mi ciclo su di esso
      * e se la lettera presa è una consonante ti ritorna vero quindi poi bisognerà tenerne
      * conto per la formazione del codice fiscale
-     * @param lettera
-     * @return
+     *
+     * Controlla quindi che il carattere passato sia una consonante
+     * @param lettera da controllare
+     * @return validità
      */
     public boolean controlloConsonanti(char lettera){
         boolean corretto = true;
@@ -20,6 +22,12 @@ public class Gestione{
         return corretto;
     }
 
+    /**
+     * Metodo richiamato per vedere se il carattere passato sia una vocale
+     *
+     * @param lettera da controllare
+     * @return validità
+     */
     public boolean controlloVocali(char lettera){
         boolean corretto = false;
         if (lettera == 'A' || lettera == 'E' || lettera == 'I' || lettera == 'O' || lettera == 'U'){
@@ -28,6 +36,14 @@ public class Gestione{
         return corretto;
     }
 
+    /**
+     * Metodo che ci viene in soccorso quando creiamo la lettera di controllo
+     * I caratteri del codice fiscale in posizione dispari assumeranno un valore
+     * secondo il seguente switch
+     *
+     * @param lettera
+     * @return valore della lettera
+     */
     public int tabellaDispari(char lettera){
         int valore_dispari;
         switch(lettera){
@@ -96,6 +112,14 @@ public class Gestione{
         }
     }
 
+    /**
+     * Metodo che ci viene in soccorso quando creiamo la lettera di controllo
+     * I caratteri del codice fiscale in posizione pari assumeranno un valore
+     * secondo il seguente switch
+     *
+     * @param lettera
+     * @return valore della lettera
+     */
     public int tabellaPari(char lettera){
         int valore_pari;
         switch(lettera){
@@ -164,6 +188,14 @@ public class Gestione{
         }
     }
 
+    /**
+     * Metodo che mi serve per la lettera di controllo.
+     * Una volta presi e sommati tutti i valori che assumono i quindici caratteri del codice fiscale,
+     * dividiamo per 26 e il resto viene convertito da un numero a un carattere che mi rappresenterà
+     * la lettera del carattere di controllo
+     * @param valore
+     * @return lettera di controllo
+     */
     public char tabellaConversione(int valore){
         char caratterino;
         switch(valore){
@@ -223,6 +255,11 @@ public class Gestione{
 
     }
 
+    /**
+     * Metodo che mi converte il mese, dato in numero, nel suo carattere (lettera) corrispondente
+     * @param numero_mese
+     * @return lettera corrispondente al mese
+     */
     public char conversioneMese(int numero_mese){
         char mese;
         switch (numero_mese) {
